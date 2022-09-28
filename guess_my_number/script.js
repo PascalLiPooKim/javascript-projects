@@ -18,16 +18,18 @@ const startingScore = 20
 let score = startingScore;
 document.querySelector('.score').textContent = score;
 // document.querySelector('.number').textContent = secretNumber;
+let highestScore = 0;
 
 document.querySelector('.check').addEventListener('click', function () {
+
     const guess = Number(document.querySelector('.guess').value);
     console.log(guess, typeof guess);
 
     if (score > 0) {
 
         // when there is no input
-        if (!guess) {
-            document.querySelector('.message').textContent = '⛔ No Number Input!!';
+        if (!guess || guess < 1 || guess > 20) {
+            document.querySelector('.message').textContent = '⛔ Invalid Input!!';
         }
         // when the player wins
         else if (guess == secretNumber) {
@@ -36,6 +38,9 @@ document.querySelector('.check').addEventListener('click', function () {
 
             document.querySelector('body').style.backgroundColor = '#60b347';
             document.querySelector('.number').style.width = '30rem'
+            
+            highestScore = Math.max(highestScore, score)
+            document.querySelector('.highscore').textContent = highestScore;
         }
         // when guess is too high
         else if (guess > secretNumber) {
@@ -49,7 +54,7 @@ document.querySelector('.check').addEventListener('click', function () {
         }
     }
     
-
+    
     document.querySelector('.score').textContent = score;
 
     if (!score) {
@@ -70,4 +75,5 @@ document.querySelector('.again').addEventListener('click', function () {
     document.querySelector('.guess').value = '';
     document.querySelector('body').style.backgroundColor = '#222';
     document.querySelector('.number').style.width = '15rem'
-}); 
+    console.log(secretNumber);
+});
