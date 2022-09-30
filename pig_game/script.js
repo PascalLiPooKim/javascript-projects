@@ -16,16 +16,35 @@ const btnHold = document.querySelector('.btn--hold');
 
 // Starting conditions
 
-score0El.textContent = 0;
-score1El.textContent = 0;
-diceEl.classList.add('hidden');
+let scores, currentScore, activePlayer, playing, pointsToWin;
 
-// const scores = new Array(2).fill(0);
-const scores = [0, 0];
-let currentScore = 0;
-let activePlayer = 0;
-let playing = true;
 
+const init = function () {
+
+    // const scores = new Array(2).fill(0);
+    scores = [0, 0];
+    currentScore = 0;
+    activePlayer = 0;
+    playing = true;
+
+    // pointsToWin = Number(prompt("How many points to win the game? (Should be at least 10)"));
+    pointsToWin = 100;
+    // console.log(pointsToWin);
+
+    score0El.textContent = 0;
+    score1El.textContent = 0;
+    current0El.textContent = 0;
+    current1El.textContent = 0;
+
+    diceEl.classList.add('hidden');
+    player0El.classList.remove('player--winner');
+    player1El.classList.remove('player--winner');
+    player0El.classList.add('player--active');
+    player1El.classList.remove('player--active');
+
+}
+
+init();
 
 const switchPlayer = function () {
     currentScore = 0;
@@ -59,6 +78,7 @@ btnRoll.addEventListener('click', function () {
     }
 });
 
+
 btnHold.addEventListener('click', function () {
     if (playing) {
         // Add current score to active player;s score
@@ -70,7 +90,7 @@ btnHold.addEventListener('click', function () {
 
         // Check if player's score in >= 100
         // Finish the game
-        if (scores[activePlayer] >= 20) {
+        if (scores[activePlayer] >= pointsToWin) {
             playing = false;
             diceEl.classList.add('hidden');
             document.querySelector(`#current--${activePlayer}`).textContent = 0;
@@ -85,3 +105,5 @@ btnHold.addEventListener('click', function () {
         }
     }
 });
+
+btnNew.addEventListener('click', init);
