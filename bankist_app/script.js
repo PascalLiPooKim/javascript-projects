@@ -71,7 +71,7 @@ const displayMovements = function (movements) {
 
     const html = `
       <div class="movements__row">
-        <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+        <div class="movements__type movements__type--${type}">${i + 1}. ${type}</div>
         <div class="movements__value">${mov} £</div>
       </div>
     `;
@@ -81,16 +81,13 @@ const displayMovements = function (movements) {
 }
 displayMovements(account1.movements);
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
+const createUsernames = function (accs) {
 
-// const currencies = new Map([
-//   ['USD', 'United States dollar'],
-//   ['EUR', 'Euro'],
-//   ['GBP', 'Pound sterling'],
-// ]);
+  accs.forEach(function (acc) {
+    acc.username = acc.owner.toLowerCase().split(' ').
+      map(name => name[0]).join('');
+  });
+}
 
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-/////////////////////////////////////////////////
+createUsernames(accounts);
+console.log(accounts);
