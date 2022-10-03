@@ -81,6 +81,48 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
+const formatMovementsDate = function (date) {
+
+  const calcDaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1)/  (1000 * 60 * 60 * 24));
+
+  const daysPassed = calcDaysPassed(new Date(), date);
+
+  let movDay;
+
+  if (daysPassed === 0) {
+    movDay = 'Today';
+  }
+  else if (daysPassed === 1) {
+    movDay = 'Yesterday';
+  }
+  else if (daysPassed <= 7) {
+    movDay = `${daysPassed} days ago`;
+  }
+  else if (daysPassed >= 7 && daysPassed <= 30) {
+    movDay = `${Math.round(daysPassed/7)} weeks ago`;
+  }
+  else if (daysPassed >= 30 && daysPassed <= 365) {
+    movDay = `${Math.round(daysPassed/ (7 * 4))} months ago`;
+  }
+  else {
+    movDay = `${Math.round(daysPassed/ 365)} years ago`;
+  }
+
+  
+  const day = `${date.getDate()}`.padStart(2, 0);
+  const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  const year = date.getFullYear();
+  const hour = `${date.getHours()}`.padStart(2, 0);
+  const minute = `${date.getMinutes()}`.padStart(2, 0);
+  const second = `${date.getSeconds()}`.padStart(2, 0);
+
+  return `${day}/${month}/${year}, 
+  ${hour}:${minute}:${second} -> ${movDay}`;
+
+  
+}
+
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
@@ -89,15 +131,9 @@ const displayMovements = function (acc, sort = false) {
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
+    // Create current date and time
     const date = new Date(acc.movementsDates.at(i));
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
-    const hour = `${date.getHours()}`.padStart(2, 0);
-    const minute = `${date.getMinutes()}`.padStart(2, 0);
-    const second = `${date.getSeconds()}`.padStart(2, 0);
-    const displayDate = `${day}/${month}/${year}, 
-    ${hour}:${minute}:${second}`;
+    const displayDate = formatMovementsDate(date);
 
     const html = `
       <div class="movements__row">
@@ -189,7 +225,6 @@ btnLogin.addEventListener('click', function (e) {
     }`;
     containerApp.style.opacity = 100;
 
-    // Create current date and time
     const now = new Date();
     const day = `${now.getDate()}`.padStart(2, 0);
     const month = `${now.getMonth() + 1}`.padStart(2, 0);
@@ -198,6 +233,8 @@ btnLogin.addEventListener('click', function (e) {
     const minute = `${now.getMinutes()}`.padStart(2, 0);
     const second = `${now.getSeconds()}`.padStart(2, 0);
     labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minute}:${second}`;
+
+    
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
