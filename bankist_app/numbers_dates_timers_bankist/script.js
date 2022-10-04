@@ -81,10 +81,10 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
-const formatMovementsDate = function (date) {
+const formatMovementsDate = function (date, locale) {
 
   const calcDaysPassed = (date1, date2) =>
-    Math.round(Math.abs(date2 - date1)/  (1000 * 60 * 60 * 24));
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
   const daysPassed = calcDaysPassed(new Date(), date);
 
@@ -100,28 +100,30 @@ const formatMovementsDate = function (date) {
     movDay = `${daysPassed} days ago`;
   }
   else if (daysPassed >= 7 && daysPassed <= 30) {
-    movDay = `${Math.round(daysPassed/7)} weeks ago`;
+    movDay = `${Math.round(daysPassed / 7)} weeks ago`;
   }
   else if (daysPassed >= 30 && daysPassed <= 365) {
-    movDay = `${Math.round(daysPassed/ (7 * 4))} months ago`;
+    movDay = `${Math.round(daysPassed / (7 * 4))} months ago`;
   }
   else {
-    movDay = `${Math.round(daysPassed/ 365)} years ago`;
+    movDay = `${Math.round(daysPassed / 365)} years ago`;
   }
 
   
-  const day = `${date.getDate()}`.padStart(2, 0);
-  const month = `${date.getMonth() + 1}`.padStart(2, 0);
-  const year = date.getFullYear();
-  const hour = `${date.getHours()}`.padStart(2, 0);
-  const minute = `${date.getMinutes()}`.padStart(2, 0);
-  const second = `${date.getSeconds()}`.padStart(2, 0);
+  // const day = `${date.getDate()}`.padStart(2, 0);
+  // const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  // const year = date.getFullYear();
+  // const hour = `${date.getHours()}`.padStart(2, 0);
+  // const minute = `${date.getMinutes()}`.padStart(2, 0);
+  // const second = `${date.getSeconds()}`.padStart(2, 0);
 
-  return `${day}/${month}/${year}, 
-  ${hour}:${minute}:${second} -> ${movDay}`;
+  // return `${day}/${month}/${year}, 
+  // ${hour}:${minute}:${second} -> ${movDay}`;
+  
+  return new Intl.DateTimeFormat(locale).format(date);
 
   
-}
+};
 
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
@@ -133,7 +135,7 @@ const displayMovements = function (acc, sort = false) {
 
     // Create current date and time
     const date = new Date(acc.movementsDates.at(i));
-    const displayDate = formatMovementsDate(date);
+    const displayDate = formatMovementsDate(date, acc.locale);
 
     const html = `
       <div class="movements__row">
@@ -225,14 +227,29 @@ btnLogin.addEventListener('click', function (e) {
     }`;
     containerApp.style.opacity = 100;
 
+    // const now = new Date();
+    // const day = `${now.getDate()}`.padStart(2, 0);
+    // const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    // const year = now.getFullYear();
+    // const hour = `${now.getHours()}`.padStart(2, 0);
+    // const minute = `${now.getMinutes()}`.padStart(2, 0);
+    // const second = `${now.getSeconds()}`.padStart(2, 0);
+    // labelDate.textContent = `${day}/${month}/${year}, 
+    // ${hour}:${minute}:${second}`;
+    
     const now = new Date();
-    const day = `${now.getDate()}`.padStart(2, 0);
-    const month = `${now.getMonth() + 1}`.padStart(2, 0);
-    const year = now.getFullYear();
-    const hour = `${now.getHours()}`.padStart(2, 0);
-    const minute = `${now.getMinutes()}`.padStart(2, 0);
-    const second = `${now.getSeconds()}`.padStart(2, 0);
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minute}:${second}`;
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      weekday: 'long'
+    }
+    labelDate.textContent = new Intl.DateTimeFormat(currentAccount.locale,
+      options)
+      .format(now);
 
     
 
