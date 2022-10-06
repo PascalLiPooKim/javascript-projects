@@ -119,8 +119,8 @@ const formatMovementsDate = function (date, locale) {
 
   // return `${day}/${month}/${year}, 
   // ${hour}:${minute}:${second} -> ${movDay}`;
-  
-  return new Intl.DateTimeFormat(locale).format(date);
+  const intlDatetIme = new Intl.DateTimeFormat(locale).format(date)
+  return `${intlDatetIme}; ${movDay}`;
 };
 
 const formatCur = function (value, locale, currency) {
@@ -248,22 +248,24 @@ btnLogin.addEventListener('click', function (e) {
     // labelDate.textContent = `${day}/${month}/${year}, 
     // ${hour}:${minute}:${second}`;
     
-    const now = new Date();
-    const options = {
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      weekday: 'long'
-    }
-    labelDate.textContent = new Intl.DateTimeFormat(currentAccount.locale,
-      options)
-      .format(now);
-
+    setInterval(function () {
+      const now = new Date();
+      const options = {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        weekday: 'long'
+      }
+      labelDate.textContent = new Intl.DateTimeFormat(currentAccount.locale,
+        options)
+        .format(now);
+    }, 1000);
     
 
+  
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
@@ -273,7 +275,7 @@ btnLogin.addEventListener('click', function (e) {
   }
   else {
     labelWelcome.textContent = "Invalid Login Credentials";
-    containerApp.style.opacity = 100;
+    containerApp.style.opacity = 0;
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -312,15 +314,18 @@ btnLoan.addEventListener('click', function (e) {
 
   const amount = Math.floor(inputLoanAmount.value);
 
-  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
-    currentAccount.movements.push(amount);
+  if (amount > 0 && currentAccount.movements.some(mov =>
+    mov >= amount * 0.1)) {
+    setTimeout(function () {
+      // Add movement
+      currentAccount.movements.push(amount);
 
-    // Add loan date
-    currentAccount.movementsDates.push(new Date().toISOString());
+      // Add loan date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    // Update UI
-    updateUI(currentAccount);
+      // Update UI
+      updateUI(currentAccount);
+    }, 2500);
   }
   inputLoanAmount.value = '';
 });
